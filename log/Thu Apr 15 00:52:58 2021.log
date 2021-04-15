@@ -1,0 +1,13 @@
+DEBUG:parso.cache:pickle loaded: /opt/anaconda3/lib/python3.7/site-packages/jedi/third_party/typeshed/stdlib/2and3/builtins.pyi
+DEBUG:parso.cache:pickle loaded: /opt/anaconda3/lib/python3.7/typing.py
+DEBUG:parso.cache:pickle loaded: /opt/anaconda3/lib/python3.7/site-packages/jedi/third_party/typeshed/stdlib/3/typing.pyi
+DEBUG:parso.cache:pickle loaded: /opt/anaconda3/lib/python3.7/site-packages/jedi/third_party/typeshed/stdlib/3/sys.pyi
+DEBUG:parso.python.diff:diff parser start
+DEBUG:parso.python.diff:line_lengths old: 113; new: 100
+DEBUG:parso.python.diff:-> code[equal] old[1:97] new[1:97]
+DEBUG:parso.python.diff:copy old[2:96] new[1:96]
+DEBUG:parso.python.diff:parse_part from 97 to 100 (to 99 in part parser)
+DEBUG:parso.python.diff:-> code[delete] old[98:103] new[98:97]
+DEBUG:parso.python.diff:-> code[equal] old[104:104] new[98:98]
+DEBUG:parso.python.diff:-> code[replace] old[105:113] new[99:100]
+DEBUG:parso.python.diff:diff parser end
