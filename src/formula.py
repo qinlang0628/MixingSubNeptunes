@@ -13,7 +13,7 @@ def log10_linspace(start, stop, num):
 
 def calc_fugacity_coeff(T_b, P_b, EOS_table, gas="H2"):
     ideal_gas_constant = 8.314 # unit in J/mol/K
-    num_points = 5000 # number of points for integration
+    num_points = 500 # number of points for integration
     lower_pressure = 1e6   # lower bound for integration, unit in Pa (1e5 is also fine, but smaller than that lead to large error)
     
     if gas == "H2":
@@ -22,13 +22,11 @@ def calc_fugacity_coeff(T_b, P_b, EOS_table, gas="H2"):
         mol_mass = 0.004 # unit in kg/mol
     
     P_array = log10_linspace(lower_pressure, P_b, num_points)
-    rho_array = np.zeros_like(P_array)
     
-    for (i, P) in enumerate(P_array):
-        rho_array[i], out_of_table = interpolate_df(T_b, P, EOS_table, target="rho", col1="T", col2="P")
-        if out_of_table:
+    rho_array, out_of_table = interpolate_array(T_b, P_array, EOS_table)
+    if out_of_table:
             raise ValueError("(P, T) is out of table")
-    
+
     # density if it's ideal gas        
     rho_ideal_array = P_array * mol_mass  / (ideal_gas_constant * T_b)
     # degree of compression

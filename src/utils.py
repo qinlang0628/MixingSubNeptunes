@@ -155,6 +155,41 @@ def interpolate_df(v1, v2, df, target="S", col1="T", col2="P"):
     # convert the output from 1d array to a scalar
     return np.asscalar(S), out_of_table
 
+def interpolate_array(v1, v2_array, df, target='rho', col1='T', col2='P'):
+    '''the same as interpolate_df, but return an array of shape(n,)
+    '''
+    # lookup the closest T in the EOS table
+    T_vals = df[col1].values
+    T_lower, T_upper = lookup_boundary(v1, T_vals)
+    factor_lower, factor_upper = (T_upper - v1) / (T_upper - T_lower), (v1 - T_lower) / (T_upper - T_lower), 
+
+    # lookup values
+    P_lower_array = df[df[col1]==T_lower][col2].to_numpy()
+    P_upper_array = df[df[col1]==T_upper][col2].to_numpy()
+    rho_lower_array = df[df[col1]==T_lower][target].to_numpy()
+    rho_upper_array = df[df[col1]==T_upper][target].to_numpy()
+    
+    # build reference array
+    P_ref_array = np.add(factor_lower * P_lower_array, factor_upper * P_upper_array)
+    rho_ref_array = np.add(factor_lower * rho_lower_array, factor_upper * rho_upper_array)
+    
+    # out of table handling
+    out_of_table = False
+    P_min, P_max = P_ref_array.min(), P_ref_array.max()
+    v2_array_min, v2_array_max = v2_array.min(), v2_array.max()
+    if v2_array_min < P_min:
+        logging.debug("warning: {} reaches lower bound: {}".format(col2, P_min))
+        out_of_table = True
+    if v2_array_max > P_max:
+        logging.debug("warning: {} reaches upper bound: {}".format(col2, P_max))
+        out_of_table = True
+    v2_array = np.clip(v2_array, a_min=P_min, a_max=P_max)
+    
+    # interpolate
+    rho_array = interpolate.interp1d(P_ref_array, rho_ref_array)(v2_array)
+    
+    return rho_array, out_of_table
+
 
 def interpolate_S(T, P, NewEOS):
     '''we want to get S value of a given (T, P) combination

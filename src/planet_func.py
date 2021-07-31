@@ -495,6 +495,7 @@ def integrate_with_atmos(planet, R_guess, dr_coeff, EOS, R_guess_history,
                              R_guess_max = R_guess_max, R_guess_min = R_guess_min, uniform=True, T_jump=False)
     
     if not fugacity:
+        print("Congratulations! The itration is successful! :)")
         return R_guess, planet
     else:
         f, f_He = calc_F(planet, EOS)
